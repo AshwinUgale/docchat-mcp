@@ -1,9 +1,9 @@
-"""docchat-mcp CLI.
+"""docchat-server CLI.
 
 Subcommands:
-- ``docchat-mcp serve``                  - run the MCP server on stdio.
-- ``docchat-mcp index <library> <ver>``  - populate the local Qdrant.
-- ``docchat-mcp list``                   - show indexed collections.
+- ``docchat-server serve``                  - run the MCP server on stdio.
+- ``docchat-server index <library> <ver>``  - populate the local Qdrant.
+- ``docchat-server list``                   - show indexed collections.
 
 The ``serve`` subcommand is what an MCP host (Claude Code, Cursor, Cline)
 spawns. The ``index`` and ``list`` subcommands are for the user, run
@@ -18,13 +18,13 @@ import sys
 
 from dotenv import load_dotenv
 
-from docchat_mcp import __version__
+from docchat_server import __version__
 
 
 def _cmd_serve(_args: argparse.Namespace) -> int:
-    # Import inside the handler so `docchat-mcp index` doesn't pull in
+    # Import inside the handler so `docchat-server index` doesn't pull in
     # FastMCP (which checks OPENAI_API_KEY at import time in server.py).
-    from docchat_mcp.server import main as serve_main
+    from docchat_server.server import main as serve_main
 
     serve_main()
     return 0
@@ -34,7 +34,7 @@ def _cmd_index(args: argparse.Namespace) -> int:
     load_dotenv()
     if not os.environ.get("OPENAI_API_KEY"):
         print(
-            "ERROR: OPENAI_API_KEY is not set. docchat-mcp uses OpenAI's "
+            "ERROR: OPENAI_API_KEY is not set. docchat-server uses OpenAI's "
             "embeddings API. Set it in your shell or a .env file.",
             file=sys.stderr,
         )
@@ -42,7 +42,7 @@ def _cmd_index(args: argparse.Namespace) -> int:
 
     from openai import OpenAI
 
-    from docchat_mcp.indexer import DocIndexer, open_qdrant
+    from docchat_server.indexer import DocIndexer, open_qdrant
 
     qdrant = open_qdrant()
     indexer = DocIndexer(qdrant=qdrant, openai=OpenAI())
@@ -63,14 +63,14 @@ def _cmd_index(args: argparse.Namespace) -> int:
 
 
 def _cmd_list(_args: argparse.Namespace) -> int:
-    from docchat_mcp.indexer import open_qdrant
-    from docchat_mcp.library_config import LIBRARY_CONFIG
+    from docchat_server.indexer import open_qdrant
+    from docchat_server.library_config import LIBRARY_CONFIG
 
     qdrant = open_qdrant()
     collections = qdrant.get_collections().collections
     print("Indexed collections:")
     if not collections:
-        print("  (none yet - run `docchat-mcp index <library> <version>`)")
+        print("  (none yet - run `docchat-server index <library> <version>`)")
     for c in collections:
         try:
             count = qdrant.count(collection_name=c.name).count
@@ -84,10 +84,10 @@ def _cmd_list(_args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="docchat-mcp",
+        prog="docchat-server",
         description="Version-pinned doc retrieval as an MCP server.",
     )
-    parser.add_argument("--version", action="version", version=f"docchat-mcp {__version__}")
+    parser.add_argument("--version", action="version", version=f"docchat-server {__version__}")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p_serve = sub.add_parser("serve", help="run the MCP server on stdio")

@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from openai import OpenAI
 from qdrant_client import QdrantClient
 
-from docchat_mcp.library_config import collection_name_for
+from docchat_server.library_config import collection_name_for
 
 __all__ = ["Citation", "SearchResult", "search_docs"]
 
@@ -92,7 +92,7 @@ def search_docs(
         return SearchResult(
             text=(
                 f"No indexed docs for {library}@{version}. "
-                f"Run `docchat-mcp index {library} {version}` to populate."
+                f"Run `docchat-server index {library} {version}` to populate."
             ),
             citations=(),
             top_scores=(),

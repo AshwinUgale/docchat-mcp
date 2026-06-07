@@ -1,0 +1,50 @@
+name: Release
+
+# Triggered by pushing a semver tag. Example:
+#   git tag v0.0.1
+#   git push --tags
+#
+# Pre-req: PyPI trusted publisher is registered for this repo
+# (https://pypi.org/manage/account/publishing/). For the very first
+# release, register a "pending publisher" before pushing the tag so
+# PyPI knows to accept the OIDC token before the project exists.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  id-token: write   # required for PyPI trusted publishing (OIDC)
+
+jobs:
+  release:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/docchat-server/
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: latest
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Sync project (so smoke tests can import the package)
+        run: uv sync --frozen --no-dev
+
+      - name: Build wheel + sdist
+        run: uv build
+
+      - name: Verify the build artifacts exist
+        run: ls -la dist/
+
+      - name: Publish to PyPI via trusted publishing
+        run: uv publish --trusted-publishing always

@@ -11,7 +11,7 @@ Tools registered:
   in the local embedded Qdrant. Use before search_docs if you're unsure
   what's available.
 
-Indexing is deliberately CLI-only (``docchat-mcp index <lib> <ver>``);
+Indexing is deliberately CLI-only (``docchat-server index <lib> <ver>``);
 exposing it as an MCP tool would let any connected LLM trigger arbitrary
 embedding cost / network calls, which is the wrong default.
 """
@@ -27,10 +27,10 @@ from dotenv import load_dotenv
 from fastmcp import FastMCP
 from openai import OpenAI
 
-from docchat_mcp import __version__
-from docchat_mcp.indexer import open_qdrant
-from docchat_mcp.library_config import LIBRARY_CONFIG
-from docchat_mcp.retrieval import search_docs as _search_docs
+from docchat_server import __version__
+from docchat_server.indexer import open_qdrant
+from docchat_server.library_config import LIBRARY_CONFIG
+from docchat_server.retrieval import search_docs as _search_docs
 
 # All logs to stderr so stdout stays clean for MCP JSON-RPC.
 logging.basicConfig(
@@ -38,7 +38,7 @@ logging.basicConfig(
     format="%(name)s | %(levelname)s | %(message)s",
     stream=sys.stderr,
 )
-logger = logging.getLogger("docchat-mcp")
+logger = logging.getLogger("docchat-server")
 
 # .env in the cwd is a convenience for local development; production
 # users should rely on environment variables set by the MCP host.
@@ -50,7 +50,7 @@ def _require_openai_key() -> None:
     the first search_docs call would return an opaque error to the LLM."""
     if not os.environ.get("OPENAI_API_KEY"):
         logger.error(
-            "OPENAI_API_KEY is not set. docchat-mcp uses OpenAI's embeddings "
+            "OPENAI_API_KEY is not set. docchat-server uses OpenAI's embeddings "
             "API for retrieval. Set the env var in your MCP host config."
         )
         sys.exit(2)
@@ -140,8 +140,8 @@ async def list_indexed() -> dict[str, object]:
 
 
 def main() -> None:
-    """Entrypoint when invoked as ``docchat-mcp serve`` (or directly)."""
-    logger.info("docchat-mcp %s starting on stdio", __version__)
+    """Entrypoint when invoked as ``docchat-server serve`` (or directly)."""
+    logger.info("docchat-server %s starting on stdio", __version__)
     mcp.run(transport="stdio")
 
 

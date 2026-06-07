@@ -1,4 +1,4 @@
-# docchat-mcp
+# docchat-server
 
 > Version-pinned documentation retrieval as a Model Context Protocol server. Gives Claude Code / Cursor / any MCP-aware AI grounded answers from the docs of the exact library version your lockfile pins.
 
@@ -14,7 +14,7 @@
 
 Claude Code, Cursor, and other AI coding assistants answer library questions from training data. If your project pins `react@18.2.0` and the latest is `19.1.0`, you get React 19 APIs in your React 18 file — the model has no way to know which version actually matters.
 
-`docchat-mcp` is an MCP server that fixes that. Index a library at the version you pin once. Register the server with your MCP host. Now every query to your coding assistant can be grounded in the docs for the *exact pinned version*, with hard refusal when the docs don't cover the question.
+`docchat-server` is an MCP server that fixes that. Index a library at the version you pin once. Register the server with your MCP host. Now every query to your coding assistant can be grounded in the docs for the *exact pinned version*, with hard refusal when the docs don't cover the question.
 
 It's the [DocChat VS Code extension](https://github.com/AshwinUgale/docchat) stripped of its agent + chat UI, exposed as an MCP tool surface instead. The retrieval logic, version-aware routing, and per-library cosine score floors are identical (and identically eval-tuned).
 
@@ -23,7 +23,7 @@ It's the [DocChat VS Code extension](https://github.com/AshwinUgale/docchat) str
 ## Install
 
 ```bash
-pip install docchat-mcp        # or: uvx --from docchat-mcp docchat-mcp
+pip install docchat-server        # or: uvx --from docchat-server docchat-server
 ```
 
 Requires Python 3.11+ and an `OPENAI_API_KEY` env var (used for query + index-time embeddings). The Qdrant vector store runs *embedded* — no Docker, no separate server.
@@ -37,17 +37,17 @@ Requires Python 3.11+ and an `OPENAI_API_KEY` env var (used for query + index-ti
 ```bash
 export OPENAI_API_KEY=sk-...
 
-docchat-mcp index react 18.2.0
-docchat-mcp index fastapi 0.100.0
-docchat-mcp index vue 3.4.0
+docchat-server index react 18.2.0
+docchat-server index fastapi 0.100.0
+docchat-server index vue 3.4.0
 ```
 
-Each index takes ~30–60 seconds and a few cents of embedding cost. Stored at `~/.docchat-mcp/qdrant/`.
+Each index takes ~30–60 seconds and a few cents of embedding cost. Stored at `~/.docchat-server/qdrant/`.
 
 ### 2. Verify
 
 ```bash
-docchat-mcp list
+docchat-server list
 ```
 
 ```
@@ -67,7 +67,7 @@ Claude Desktop / Claude Code: add to your MCP config (`~/.config/claude/mcp-conf
 {
   "mcpServers": {
     "docchat": {
-      "command": "docchat-mcp",
+      "command": "docchat-server",
       "args": ["serve"],
       "env": {
         "OPENAI_API_KEY": "sk-..."

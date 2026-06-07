@@ -4,7 +4,7 @@ Ported from docchat/sidecar/src/docchat_sidecar/indexer.py with two changes:
 
 1. Uses ``QdrantClient`` in embedded mode (local path, no Docker) instead
    of ``AsyncQdrantClient`` against a running server. The embedded mode
-   writes to ``~/.docchat-mcp/qdrant/`` and is fine for the
+   writes to ``~/.docchat-server/qdrant/`` and is fine for the
    single-user / hundreds-of-thousands-of-vectors scale this MCP server
    serves. Users can override via the ``QDRANT_PATH`` env var.
 2. Drops the streaming-progress protocol (IndexProgress / IndexComplete
@@ -27,7 +27,7 @@ from openai import OpenAI
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, PointStruct, VectorParams
 
-from docchat_mcp.library_config import collection_name_for, urls_for
+from docchat_server.library_config import collection_name_for, urls_for
 
 __all__ = ["DocIndexer", "default_qdrant_path", "open_qdrant"]
 
@@ -49,7 +49,7 @@ def default_qdrant_path() -> Path:
     override = os.environ.get("QDRANT_PATH")
     if override:
         return Path(override).expanduser()
-    return Path.home() / ".docchat-mcp" / "qdrant"
+    return Path.home() / ".docchat-server" / "qdrant"
 
 
 def open_qdrant(path: Path | None = None) -> QdrantClient:

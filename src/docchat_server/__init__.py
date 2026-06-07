@@ -1,4 +1,4 @@
-"""docchat-mcp - version-pinned documentation retrieval as an MCP server.
+"""docchat-server - version-pinned documentation retrieval as an MCP server.
 
 Stripped-down sibling of docchat (https://github.com/AshwinUgale/docchat).
 Exposes ``search_docs`` and ``list_indexed`` MCP tools that Claude Code,
