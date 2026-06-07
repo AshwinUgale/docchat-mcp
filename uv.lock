@@ -350,7 +350,7 @@ wheels = [
 ]
 
 [[package]]
-name = "docchat-mcp"
+name = "docchat-server"
 version = "0.0.1"
 source = { editable = "." }
 dependencies = [
