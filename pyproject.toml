@@ -1,0 +1,64 @@
+[project]
+name = "docchat-mcp"
+version = "0.0.1"
+description = "Version-pinned documentation retrieval as a Model Context Protocol server. Gives Claude Code / Cursor / any MCP-aware AI grounded answers from the docs of the exact library version your lockfile pins."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Ashwin Ugale", email = "ugaleashwin@gmail.com" }]
+keywords = ["mcp", "model-context-protocol", "llm", "rag", "docs", "version-pinned", "claude", "cursor"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Documentation",
+]
+dependencies = [
+    "fastmcp>=0.4",
+    "qdrant-client>=1.12",
+    "openai>=1.40",
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/AshwinUgale/docchat-mcp"
+Repository = "https://github.com/AshwinUgale/docchat-mcp"
+Issues = "https://github.com/AshwinUgale/docchat-mcp/issues"
+
+[project.scripts]
+docchat-mcp = "docchat_mcp.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/docchat_mcp"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
