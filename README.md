@@ -144,9 +144,13 @@ Adding more libraries: extend `_LIBRARY_CONFIG` in `library_config.py` and submi
 
 ---
 
-## Sibling project
+## Related projects
 
-The same retrieval engine ships as a [VS Code extension on the Marketplace](https://marketplace.visualstudio.com/items?itemName=AshwinUgale.docchat). Source: [`AshwinUgale/docchat`](https://github.com/AshwinUgale/docchat). If you want a chat panel inside VS Code instead of MCP tool integration in Cursor/Claude Desktop, install that.
+Part of a 4-project portfolio of production AI engineering:
+
+- **[DocChat VS Code extension](https://github.com/AshwinUgale/docchat)** ([Marketplace](https://marketplace.visualstudio.com/items?itemName=AshwinUgale.docchat)) — Same retrieval engine, chat panel instead of MCP tool surface.
+- **[mneme](https://github.com/AshwinUgale/mneme)** ([PyPI as smolAmem](https://pypi.org/project/smolAmem/)) — Multi-tier memory used by the DocChat extension's agent.
+- **[toolpicker](https://github.com/AshwinUgale/toolpicker)** ([PyPI](https://pypi.org/project/toolpicker/)) — Tool routing used by the DocChat extension's agent.
 
 > The GitHub repo for this server is still named [`docchat-mcp`](https://github.com/AshwinUgale/docchat-mcp) (predates the PyPI rename to `docchat-server` — `docchat-mcp` was taken on PyPI).
 
