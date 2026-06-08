@@ -62,7 +62,22 @@ mcp: FastMCP = FastMCP(name="docchat", version=__version__)
 
 # Shared resources opened once per server lifetime. Embedded Qdrant is
 # single-process; OpenAI client is connection-pooled.
-_QDRANT = open_qdrant()
+# v0.0.2: embedded-Qdrant holds a file lock on ~/.docchat-server/qdrant/.
+# If another docchat-server (or `docchat-server list/index`) is already
+# running, opening fails. Catch + exit with an actionable message instead
+# of a 30-line Python traceback the user has to parse.
+try:
+    _QDRANT = open_qdrant()
+except RuntimeError as _exc:
+    logger.error(
+        "Qdrant storage at ~/.docchat-server/qdrant is locked by another "
+        "process. Either (1) another docchat-server is already running "
+        "(quit the other MCP client or kill the process), or (2) a previous "
+        "process crashed leaving a stale lock (delete any .lock files in "
+        "that directory). Underlying error: %s",
+        _exc,
+    )
+    sys.exit(2)
 _OPENAI = OpenAI()
 
 

@@ -1,6 +1,6 @@
 [project]
 name = "docchat-server"
-version = "0.0.1"
+version = "0.0.2"
 description = "Version-pinned documentation retrieval as a Model Context Protocol server. Gives Claude Code / Cursor / any MCP-aware AI grounded answers from the docs of the exact library version your lockfile pins."
 readme = "README.md"
 requires-python = ">=3.11"
